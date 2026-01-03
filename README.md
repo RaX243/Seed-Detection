@@ -1,1 +1,5 @@
-# Seed-Detection
+# Seed-Detection=
+
+---
+
+> Seed detection with spectral identification
