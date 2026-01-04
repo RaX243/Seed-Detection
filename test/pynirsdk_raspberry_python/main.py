@@ -44,32 +44,34 @@ intensities_buf = (ctypes.c_int * PIXEL_NUM)()
 activeIndex = 0  # 激活的索引
 result = wrapper.dlpGetIntensities(activeIndex, intensities_buf, PIXEL_NUM)
 if(result>=0):
-    for i in range(5):
-        intensity = intensities_buf[i]
-        print("{:.2f}: {}".format(wavelength, intensity)) #打印前5个波长和对应强度值
-        
+    # 取前5个强度并转换为普通列表
+    intensities = [int(intensities_buf[i]) for i in range(5)]
+    # 打印前5个波长和对应强度值
+    for i, val in enumerate(intensities):
+        print("{:.2f}: {}".format(wls_buf[i], val)) # 打印前5个波长和对应强度值
+
     plt.figure(figsize=(10, 5))
-    
+
     x_positions = np.arange(1, 6)
-    
+
     bars = plt.bar(x_positions, intensities, color='skyblue', edgecolor='black')
-    
-    for bar, intensity in zip(bars, intensities):
-        height = bar.get_height()
+
+    for bar, val in zip(bars, intensities):
+        height = val
         plt.text(bar.get_x() + bar.get_width()/2., height,
-                f'{intensity}', ha='center', va='bottom', fontsize=10)
-    
+                 f'{val}', ha='center', va='bottom', fontsize=10)
+
     plt.title('前5个波长对应的强度值', fontsize=14, fontweight='bold')
     plt.xlabel('数据点序号', fontsize=12)
     plt.ylabel('强度值', fontsize=12)
-    
+
     plt.xticks(x_positions, ['1', '2', '3', '4', '5'])
-    
+
     y_max = max(intensities) * 1.1  # 最大值留10%空间
     plt.ylim(0, y_max)
-    
+
     plt.grid(axis='y', alpha=0.3, linestyle='--')
-    
+
     plt.tight_layout()
     plt.show()
 else:
