@@ -1,5 +1,7 @@
 import ctypes
 import wrapper
+import matplotlib.pyplot as plt
+import numpy as np
 
 # 900-1700nm光谱模组是228个数据点
 PIXEL_NUM = 228 
@@ -10,7 +12,7 @@ print("\n");
 result = wrapper.dlpConnect()
 print("连接设备数量:{}\n".format(result))
 
-# 调用 dlpOpenByUsb() 函数
+# 调用 dlpOpenByUsb() 函数 
 index = 0  # USB 设备索引
 result = wrapper.dlpOpenByUsb(index)
 if(result>=0):
@@ -45,5 +47,30 @@ if(result>=0):
     for i in range(5):
         intensity = intensities_buf[i]
         print("{:.2f}: {}".format(wavelength, intensity)) #打印前5个波长和对应强度值
+        
+    plt.figure(figsize=(10, 5))
+    
+    x_positions = np.arange(1, 6)
+    
+    bars = plt.bar(x_positions, intensities, color='skyblue', edgecolor='black')
+    
+    for bar, intensity in zip(bars, intensities):
+        height = bar.get_height()
+        plt.text(bar.get_x() + bar.get_width()/2., height,
+                f'{intensity}', ha='center', va='bottom', fontsize=10)
+    
+    plt.title('前5个波长对应的强度值', fontsize=14, fontweight='bold')
+    plt.xlabel('数据点序号', fontsize=12)
+    plt.ylabel('强度值', fontsize=12)
+    
+    plt.xticks(x_positions, ['1', '2', '3', '4', '5'])
+    
+    y_max = max(intensities) * 1.1  # 最大值留10%空间
+    plt.ylim(0, y_max)
+    
+    plt.grid(axis='y', alpha=0.3, linestyle='--')
+    
+    plt.tight_layout()
+    plt.show()
 else:
     print("获取强度失败!\n")
