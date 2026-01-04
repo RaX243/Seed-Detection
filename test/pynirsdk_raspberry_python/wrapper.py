@@ -1,7 +1,16 @@
 import ctypes
+import os
 
-# 加载共享库
-libwrapper = ctypes.CDLL("lib/libwrapper.so")
+# 加载共享库（使用与本文件同级的 lib 目录，确保路径正确）
+_lib_path = os.path.join(os.path.dirname(__file__), "lib", "libwrapper.so")
+if not os.path.exists(_lib_path):
+    # 回退：尝试系统库路径（例如已安装到 /usr/lib）
+    try:
+        libwrapper = ctypes.CDLL("libwrapper.so")
+    except OSError as e:
+        raise OSError(f"libwrapper.so 未找到：尝试的路径 {_lib_path} 不存在，且系统路径中未找到 libwrapper.so;原始错误: {e}")
+else:
+    libwrapper = ctypes.CDLL(_lib_path)
 
 # ----定义函数原型----
 # libwrapper.so是由c语言封装的动态库，python调用库函数时，需要先指定参数类型为ctypes。

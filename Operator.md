@@ -1,0 +1,1 @@
+sudo python3 test/pynirsdk_raspberry_python/main.py
