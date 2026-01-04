@@ -2,6 +2,28 @@ import ctypes
 import wrapper
 import matplotlib.pyplot as plt
 import numpy as np
+import matplotlib
+from matplotlib import font_manager
+import os
+
+# 自动检测系统中可用的中文字体，优先选择常见 CJK 字体；找不到则回退到 DejaVu Sans
+preferred = ['noto', 'wqy', 'simhei', 'msyh', 'msjh', 'arphic', 'ukai']
+found_font = None
+font_paths = font_manager.findSystemFonts(fontpaths=None, fontext='ttf') + font_manager.findSystemFonts(fontpaths=None, fontext='otf')
+for fpath in font_paths:
+    name = os.path.basename(fpath).lower()
+    if any(p in name for p in preferred):
+        try:
+            prop = font_manager.FontProperties(fname=fpath)
+            found_font = prop.get_name()
+            break
+        except Exception:
+            continue
+if found_font:
+    matplotlib.rcParams['font.sans-serif'] = [found_font]
+else:
+    matplotlib.rcParams['font.sans-serif'] = ['DejaVu Sans']
+matplotlib.rcParams['axes.unicode_minus'] = False
 
 # 900-1700nm光谱模组是228个数据点
 PIXEL_NUM = 228 
