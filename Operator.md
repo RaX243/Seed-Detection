@@ -1,1 +1,5 @@
-sudo python3 test/pynirsdk_raspberry_python/main.py
+
+主功能
+sudo python3 pynirsdk_raspberry_python/screen.py
+
+

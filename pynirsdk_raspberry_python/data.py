@@ -74,3 +74,16 @@ def acquire_and_plot_spectrum(device_index=0, plot_show=True, plot_save=None):
     result['success'] = True
     result['message'] = "数据采集成功"
     return result
+
+
+if __name__ == "__main__":
+    data = acquire_and_plot_spectrum()
+    if data['success']:
+        print("数据采集成功，波长和强度已更新")
+        print("前5个波长和强度:")
+        print("波长 (nm) | 强度")
+        for i in range(5):
+            print(f"{data['wavelengths'][i]:.2f} | {data['intensities'][i]}")
+    else:
+        print("数据采集失败:", data['message'])
+
