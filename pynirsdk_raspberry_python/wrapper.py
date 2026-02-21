@@ -1,16 +1,25 @@
 import ctypes
 import os
 
-# 加载共享库（使用与本文件同级的 lib 目录，确保路径正确）
-_lib_path = os.path.join(os.path.dirname(__file__), "lib", "libwrapper.so")
-if not os.path.exists(_lib_path):
-    # 回退：尝试系统库路径（例如已安装到 /usr/lib）
-    try:
-        libwrapper = ctypes.CDLL("libwrapper.so")
-    except OSError as e:
-        raise OSError(f"libwrapper.so 未找到：尝试的路径 {_lib_path} 不存在，且系统路径中未找到 libwrapper.so;原始错误: {e}")
-else:
-    libwrapper = ctypes.CDLL(_lib_path)
+current_dir = os.getcwd()
+print(f"当前工作目录: {current_dir}")
+if not os.path.exists("lib/libwrapper.so"):
+    print("lib/libwrapper.so 不存在，请确保动态库文件存在于 lib 目录下！")
+    exit(1)
+libwrapper = ctypes.CDLL("lib/libwrapper.so")
+
+
+
+
+# 开发日志:
+# 2026-02-21: 
+#   libwrapper.so动态文件是 ARM64 架构的，适用于树莓派4B等设备。
+#   本机操作是不可以的，需要相应的开发环境和设备。
+#   信息:
+#   gouixn@fedora:~/document/stduent/Seed-Detection/pynirsdk_raspberry_python$ file lib/libwrapper.so
+#   lib/libwrapper.so: ELF 64-bit LSB shared object, ARM aarch64, version 1 (SYSV), dynamically linked, BuildID[sha1]=ee3e752217886c49b3aab678b423c343f6773fe6, not stripped
+
+
 
 # ----定义函数原型----
 # libwrapper.so是由c语言封装的动态库，python调用库函数时，需要先指定参数类型为ctypes。
