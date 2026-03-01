@@ -1,9 +1,8 @@
 import sys
-from PyQt6.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout, 
-                             QWidget, QPushButton, QLabel, QTextEdit, QFrame)
-from PyQt6.QtCore import Qt
-from PyQt6.QtGui import QFont, QPalette, QColor
-# import data   # 导入数据采集模块， 本机测试的时候记得注释掉， 如果在嵌入式设备上测试就取消注释
+from PyQt5.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,QWidget, QPushButton, QLabel, QTextEdit, QFrame)
+from PyQt5.QtCore import Qt
+from PyQt5.QtGui import QFont, QPalette, QColor
+import data   # 导入数据采集模块， 本机测试的时候记得注释掉， 如果在嵌入式设备上测试就取消注释
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
@@ -122,7 +121,7 @@ class MainWindow(QMainWindow):
 
         title = QLabel("控制面板")
         title.setObjectName("titleLabel")
-        title.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        title.setAlignment(Qt.AlignCenter)
         left_layout.addWidget(title)
 
         self.startButton = QPushButton("▶ 开始采集")
@@ -177,7 +176,7 @@ class MainWindow(QMainWindow):
         
         self.result_label = QLabel("等待采集...")
         self.result_label.setStyleSheet("font-size: 18px; font-weight: bold; color: #2c3e50;")
-        self.result_label.setAlignment(Qt.AlignmentFlag.AlignCenter)
+        self.result_label.setAlignment(Qt.AlignCenter)
         result_card_layout.addWidget(self.result_label)
 
         prob_label = QLabel("各类别概率")
@@ -233,9 +232,9 @@ class MainWindow(QMainWindow):
             self.result_label.setText("模型未加载，无法进行预测")
             self.result_label.setStyleSheet("font-size: 18px; font-weight: bold; color: red;")
             return
-#        data = data.acquire_and_plot_spectrum()  # 这个是数据收集的函数，注释掉之后按照函数的注释自己预设做测试即可，不要删除这个函数
+        spectrum_data = data.acquire_and_plot_spectrum()  # 这个是数据收集的函数，注释掉之后按照函数的注释自己预设做测试即可，不要删除这个函数
         # 下面的这个数据是预设的，按照函数的注释自己预设做测试即可，在嵌入式设备上测试的时候记得注释掉
-        spectrum_data = self.collect_spectrum()
+        # spectrum_data = self.collect_spectrum()
 
         if spectrum_data['success']:
             print("数据采集成功，波长和强度已更新")
@@ -405,5 +404,5 @@ if __name__ == "__main__":
     app.setStyleSheet(STYLE_SHEET)  # 应用全局样式表
     window = MainWindow()
     window.show()
-    sys.exit(app.exec())
+    sys.exit(app.exec_())
 
