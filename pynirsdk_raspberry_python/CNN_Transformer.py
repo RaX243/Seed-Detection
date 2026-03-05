@@ -7,6 +7,7 @@ import numpy as np
 import matplotlib
 import os
 import datetime
+import builtins
 import json
 import time
 import seaborn as sns
@@ -18,9 +19,9 @@ from tqdm import tqdm
 matplotlib.use('TkAgg')
 import matplotlib.pyplot as plt
 
-# 设置中文字体
-plt.rcParams['font.sans-serif'] = ['SimHei']
-plt.rcParams['axes.unicode_minus'] = False
+# # 设置中文字体
+# plt.rcParams['font.sans-serif'] = ['SimHei']
+# plt.rcParams['axes.unicode_minus'] = False
 
 class Config:
     """模型配置参数"""
@@ -28,48 +29,7 @@ class Config:
     BASE_DIR = os.path.dirname(os.path.abspath(__file__)) # 获取当前文件所在目录
     DATA_DIR = os.path.join(BASE_DIR, '试验数据2预处理') # 数据目录,在引号之间更改
     file_path = os.path.join(DATA_DIR, '标准正态变量交换snvdata_snv.xlsx') # 数据文件路径,在引号之间更改
-
-
-    # 数据参数
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\XG.xlsx"
-    # 加载数据
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\XG.xlsx" # 替换为您的Excel文件路径、Sheet1\228
-    # file_path = r"C:\Users\Lenovo\Desktop\all.xlsx"  # 替换为您的Excel文件路径、Sheet1\228
-    # 预处理、Sheet3,228
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\窗口平滑处理smooth.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\标准化data_ax.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\标准正态变量交换snvdata_snv.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\多元散射校正MSC.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\归一化data_Nor.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\数据均值中心化MCX.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\移动窗口平均平滑data_nir.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\一阶求导d1.xlsx"# 替换为您的Excel文件路径、227
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\预处理数据\二阶求导d2.xlsx"# 替换为您的Excel文件路径、226
-    # 经预处理和SPA特征提取后的数据
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\标准化.xlsx"  # 替换为您的Excel文件路径、Sheet1、67
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\窗口平滑处理.xlsx"  # 替换为您的Excel文件路径、Sheet1、32
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\归一化.xlsx"# 替换为您的Excel文件路径、Sheet1、60
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\移动窗口平滑.xlsx"  # 替换为您的Excel文件路径、Sheet1、63
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\SNV.xlsx"  # 替换为您的Excel文件路径、Sheet1、67
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\MSC.xlsx" # 替换为您的Excel文件路径、Sheet1、65
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\MCX.xlsx" # 替换为您的Excel文件路径、Sheet1、40
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\1D.xlsx"  # 替换为您的Excel文件路径、Sheet1、74
-    # file_path = r"C:\Users\Lenovo\Desktop\玉米数据处理\SPA\最高允许150\2D.xlsx"  # 替换为您的Excel文件路径、Sheet1、80
-    # file_path = r"C:\Users\Lenovo\Desktop\实验数据\姜粉-小米粉\预处理数据\原始数据.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\副本光谱数据.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2预处理\标准正态变量交换snvdata_snv.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2预处理\窗口平滑处理data_smooth.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2预处理\多元散射校正(MSCdata_MSC.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2预处理\归一化data_Nor.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2预处理\数据均值中心化data_MCX.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2预处理\SNV_MCX_Preprocessed.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2预处理\SNV_MCX_MSC_Preprocessed.xlsx"
     sheet_name = 'Sheet3'  # Excel表格的Sheet名称
-    # 实验数据
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\实验数据：使用不是整数数据集\试验数据2 - 不是整数.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\新数据：实验数据\900-1700\试验数据\试验数据2\试验数据2，不仅仅是整数数据\各组210.xlsx"
-    # file_path = r"C:\Users\Lenovo\Desktop\实验数据：数据整理\原始数据\实验数据YM\实验数据YM 完整标签.xlsx"
     # 训练参数
     epochs = 200
     batch_size = 12
@@ -710,8 +670,15 @@ def measure_model_performance(model, input_size, device):
     }
 
 
-def train_model(model, train_loader, test_loader, criterion, optimizer, epochs=50, device='cpu', results_dir=None):
-    """训练模型并记录训练过程"""
+def train_model(model, train_loader, test_loader, criterion, optimizer,
+                config, epochs=50, device='cpu', results_dir=None,
+                progress_callback=None):
+    """
+    训练模型并记录训练过程
+    新增参数：
+        config: Config 实例，用于获取正则化系数
+        progress_callback: 每个 epoch 结束后调用的函数，接收当前 epoch 编号（从1开始）
+    """
     model = model.to(device)
     train_losses = []
     train_accs = []
@@ -736,7 +703,8 @@ def train_model(model, train_loader, test_loader, criterion, optimizer, epochs=5
             optimizer.zero_grad()
             outputs = model(spectra)
             loss = criterion(outputs, labels)
-            regularization = elastic_net_regularization(model, Config.l1_lambda, Config.weight_decay)
+            # 使用传入的 config 获取正则化系数
+            regularization = elastic_net_regularization(model, config.l1_lambda, config.weight_decay)
             total_loss = loss + regularization
             total_loss.backward()
             optimizer.step()
@@ -779,6 +747,7 @@ def train_model(model, train_loader, test_loader, criterion, optimizer, epochs=5
             best_test_acc = test_acc
             torch.save(model.state_dict(), os.path.join(results_dir, 'best_model.pth'))
 
+        # 打印日志（仍使用 print，但可在 run_experiment 中重定向）
         print(f'\nEpoch {epoch + 1}/{epochs}:')
         print(f'Train Loss: {train_loss:.4f} | Train Acc: {train_acc:.2f}%')
         print(f'Test Loss: {test_loss:.4f} | Test Acc: {test_acc:.2f}%')
@@ -789,8 +758,11 @@ def train_model(model, train_loader, test_loader, criterion, optimizer, epochs=5
                 f"{epoch + 1}\t{train_loss:.4f}\t{train_acc:.2f}\t{test_loss:.4f}\t{test_acc:.2f}\t{epoch_time:.2f}\n"
             )
 
-    return train_losses, train_accs, test_losses, test_accs, epoch_times
+        # 发送进度信号
+        if progress_callback:
+            progress_callback(epoch + 1)
 
+    return train_losses, train_accs, test_losses, test_accs, epoch_times
 
 def evaluate_model(model, loader, device, num_classes, idx_to_label, dataset_name="", results_dir=None):
     """评估模型性能"""
@@ -912,137 +884,309 @@ def plot_training_curves(train_losses, train_accs, test_losses, test_accs, resul
         plt.savefig(os.path.join(results_dir, 'training_curves.png'), dpi=300, bbox_inches='tight')
 
     plt.close()
-# main 函数
-def main():
-    timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
-    results_dir = os.path.join(Config.results_dir, f"experiment_{timestamp}")
-    os.makedirs(results_dir, exist_ok=True)
 
-    config_file = os.path.join(results_dir, 'config.json')
-    config_dict = {k: v for k, v in vars(Config).items() if not k.startswith('__') and not callable(v)}
-    with open(config_file, 'w') as f:
-        json.dump(config_dict, f, indent=4)
+def run_experiment(config, log_callback=None, progress_callback=None):
+    """
+    执行完整实验，返回结果字典
+    参数：
+        config: Config 实例，包含所有配置
+        log_callback: 用于输出日志的函数，接收字符串
+        progress_callback: 用于报告进度的函数，接收当前 epoch 编号（从1开始）
+    """
+    # 备份原始的 print 函数，用于恢复
+    original_print = builtins.print
 
-    print("\n=== 模型配置 ===")
-    print(f"数据文件: {Config.file_path}")
-    print(f"数据表格: {Config.sheet_name}")
-    print(f"训练轮数: {Config.epochs}")
-    print(f"批次大小: {Config.batch_size}")
-    print(f"学习率: {Config.learning_rate}")
-    print(f"L2正则化系数: {Config.weight_decay}")
-    print(f"L1正则化系数: {Config.l1_lambda}")
-    print(f"数据集划分: 训练集 {(1 - Config.test_size) * 100:.1f}%, 测试集 {Config.test_size * 100:.1f}%")
-    print(f"结果保存路径: {results_dir}")
+    # 如果提供了 log_callback，则重定向 print
+    if log_callback:
+        def custom_print(*args, **kwargs):
+            msg = ' '.join(str(arg) for arg in args)
+            log_callback(msg + '\n')
+            original_print(*args, **kwargs)
+        builtins.print = custom_print
 
-    device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
-    print(f"\n使用设备: {device}")
+    try:
+        # 将传入的 config 实例的属性更新到 Config 类，使模型创建时使用新值
+        for key, value in vars(config).items():
+            if not key.startswith('__'):
+                setattr(Config, key, value)
 
-    torch.manual_seed(Config.random_seed)
-    np.random.seed(Config.random_seed)
+        # 创建结果目录（使用 config 中的 results_dir 作为基目录）
+        timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+        results_dir = os.path.join(config.results_dir, f"experiment_{timestamp}")
+        os.makedirs(results_dir, exist_ok=True)
 
-    data, labels, wavelengths = load_data(Config.file_path, Config.sheet_name)
+        # 保存配置到文件
+        config_file = os.path.join(results_dir, 'config.json')
+        config_dict = {k: v for k, v in vars(config).items() if not k.startswith('__') and not callable(v)}
+        with open(config_file, 'w') as f:
+            json.dump(config_dict, f, indent=4)
 
-    # 创建标签映射
-    unique_labels = np.unique(labels)
-    label_to_idx = {label: idx for idx, label in enumerate(unique_labels)}
-    idx_to_label = {idx: label for label, idx in label_to_idx.items()}
-    num_classes = len(unique_labels)
+        print("\n=== 模型配置 ===")
+        print(f"数据文件: {config.file_path}")
+        print(f"数据表格: {config.sheet_name}")
+        print(f"训练轮数: {config.epochs}")
+        print(f"批次大小: {config.batch_size}")
+        print(f"学习率: {config.learning_rate}")
+        print(f"L2正则化系数: {config.weight_decay}")
+        print(f"L1正则化系数: {config.l1_lambda}")
+        print(f"数据集划分: 训练集 {(1 - config.test_size) * 100:.1f}%, 测试集 {config.test_size * 100:.1f}%")
+        print(f"结果保存路径: {results_dir}")
 
-    # 保存标签映射
-    label_mapping_file = os.path.join(results_dir, 'label_mapping.json')
-    with open(label_mapping_file, 'w') as f:
-        json.dump(label_to_idx, f, indent=4)
+        device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+        print(f"\n使用设备: {device}")
 
-    print("\n标签映射关系:")
-    for label, idx in label_to_idx.items():
-        print(f"原始标签: {label} -> 索引: {idx}")
+        torch.manual_seed(config.random_seed)
+        np.random.seed(config.random_seed)
 
-    X_train, X_test, y_train, y_test = train_test_split(
-        data, labels,
-        test_size=Config.test_size,
-        stratify=labels,
-        random_state=Config.random_seed
-    )
+        # 加载数据
+        data, labels, wavelengths = load_data(config.file_path, config.sheet_name)
 
-    train_dataset = SpectralDataset(X_train, y_train, label_to_idx)
-    test_dataset = SpectralDataset(X_test, y_test, label_to_idx)
-    train_loader = DataLoader(train_dataset, batch_size=Config.batch_size, shuffle=True)
-    test_loader = DataLoader(test_dataset, batch_size=Config.batch_size, shuffle=False)
+        # 创建标签映射
+        unique_labels = np.unique(labels)
+        label_to_idx = {label: idx for idx, label in enumerate(unique_labels)}
+        idx_to_label = {idx: label for label, idx in label_to_idx.items()}
+        num_classes = len(unique_labels)
 
-    model = FeatureConcatenationFusionWithDual(input_size=data.shape[1], num_classes=num_classes)
+        # 保存标签映射
+        label_mapping_file = os.path.join(results_dir, 'label_mapping.json')
+        with open(label_mapping_file, 'w') as f:
+            json.dump(label_to_idx, f, indent=4)
 
-    performance_metrics = measure_model_performance(model, data.shape[1], device)
-    print(f"模型参数总量: {performance_metrics['total_params']:,}")
-    print(f"可训练参数: {performance_metrics['trainable_params']:,}")
-    print(f"参数总量 (M): {performance_metrics['total_params_M']:.2f}M")
-    print(f"FLOPs: {performance_metrics['flops']:,}")
-    print(f"FLOPs (G): {performance_metrics['flops_G']:.4f}G")
-    print(f"单样本推理时间: {performance_metrics['inference_time_ms']:.2f}ms")
-    print(f"推理速度 (FPS): {performance_metrics['fps']:.2f}")
+        print("\n标签映射关系:")
+        for label, idx in label_to_idx.items():
+            print(f"原始标签: {label} -> 索引: {idx}")
 
-    criterion = nn.CrossEntropyLoss()
-    optimizer = optim.Adam(model.parameters(), lr=Config.learning_rate, weight_decay=Config.weight_decay)
+        # 划分数据集
+        X_train, X_test, y_train, y_test = train_test_split(
+            data, labels,
+            test_size=config.test_size,
+            stratify=labels,
+            random_state=config.random_seed
+        )
 
-    train_losses, train_accs, test_losses, test_accs, epoch_times = train_model(
-        model, train_loader, test_loader, criterion, optimizer,
-        epochs=Config.epochs, device=device, results_dir=results_dir
-    )
+        train_dataset = SpectralDataset(X_train, y_train, label_to_idx)
+        test_dataset = SpectralDataset(X_test, y_test, label_to_idx)
+        train_loader = DataLoader(train_dataset, batch_size=config.batch_size, shuffle=True)
+        test_loader = DataLoader(test_dataset, batch_size=config.batch_size, shuffle=False)
 
-    avg_epoch_time = np.mean(epoch_times)
+        # 创建模型
+        model = FeatureConcatenationFusionWithDual(input_size=data.shape[1], num_classes=num_classes)
 
-    plot_training_curves(train_losses, train_accs, test_losses, test_accs, results_dir)
+        # 测量模型性能
+        performance_metrics = measure_model_performance(model, data.shape[1], device)
+        print(f"模型参数总量: {performance_metrics['total_params']:,}")
+        print(f"可训练参数: {performance_metrics['trainable_params']:,}")
+        print(f"参数总量 (M): {performance_metrics['total_params_M']:.2f}M")
+        print(f"FLOPs: {performance_metrics['flops']:,}")
+        print(f"FLOPs (G): {performance_metrics['flops_G']:.4f}G")
+        print(f"单样本推理时间: {performance_metrics['inference_time_ms']:.2f}ms")
+        print(f"推理速度 (FPS): {performance_metrics['fps']:.2f}")
 
-    model.load_state_dict(torch.load(os.path.join(results_dir, 'best_model.pth')))
-    model = model.to(device)
+        criterion = nn.CrossEntropyLoss()
+        optimizer = optim.Adam(model.parameters(), lr=config.learning_rate, weight_decay=config.weight_decay)
 
-    evaluation_results = evaluate_all_sets(
-        model, train_loader, test_loader, device, num_classes, idx_to_label, results_dir
-    )
+        # 训练
+        train_losses, train_accs, test_losses, test_accs, epoch_times = train_model(
+            model, train_loader, test_loader, criterion, optimizer,
+            config=config, epochs=config.epochs, device=device, results_dir=results_dir,
+            progress_callback=progress_callback
+        )
 
-    # 保存结果
-    results = {
-        'model_performance': performance_metrics,
-        'training_time': {
-            'total_training_time_seconds': sum(epoch_times),
-            'average_epoch_time_seconds': avg_epoch_time,
-            'epoch_times': [float(t) for t in epoch_times]
-        },
-        'train_accuracy': evaluation_results['train']['accuracy'],
-        'test_accuracy': evaluation_results['test']['accuracy'],
-        'train_kappa': evaluation_results['train']['kappa'],
-        'test_kappa': evaluation_results['test']['kappa'],
-        'train_macro_precision': evaluation_results['train']['macro_precision'],
-        'test_macro_precision': evaluation_results['test']['macro_precision'],
-        'train_macro_recall': evaluation_results['train']['macro_recall'],
-        'test_macro_recall': evaluation_results['test']['macro_recall'],
-        'train_macro_f1': evaluation_results['train']['macro_f1'],
-        'test_macro_f1': evaluation_results['test']['macro_f1'],
-        'train_weighted_precision': evaluation_results['train']['weighted_precision'],
-        'test_weighted_precision': evaluation_results['test']['weighted_precision'],
-        'train_weighted_recall': evaluation_results['train']['weighted_recall'],
-        'test_weighted_recall': evaluation_results['test']['weighted_recall'],
-        'train_weighted_f1': evaluation_results['train']['weighted_f1'],
-        'test_weighted_f1': evaluation_results['test']['weighted_f1'],
-        'train_losses': [float(loss) for loss in train_losses],
-        'train_accuracies': [float(acc) for acc in train_accs],
-        'test_losses': [float(loss) for loss in test_losses],
-        'test_accuracies': [float(acc) for acc in test_accs],
-        'wavelengths': wavelengths.tolist(),
-        'label_mapping': label_to_idx
-    }
+        avg_epoch_time = np.mean(epoch_times)
 
-    torch.save({
-        'model_state_dict': model.state_dict(),
-        'results': results,
-        'config': config_dict
-    }, os.path.join(results_dir, 'feature_concat_results.pth'))
+        # 绘制训练曲线
+        plot_training_curves(train_losses, train_accs, test_losses, test_accs, results_dir)
 
-    with open(os.path.join(results_dir, 'results.json'), 'w', encoding='utf-8') as f:
-        json.dump(results, f, indent=4, ensure_ascii=False)
+        # 加载最佳模型并评估
+        model.load_state_dict(torch.load(os.path.join(results_dir, 'best_model.pth')))
+        model = model.to(device)
 
-    print("\n训练和评估完成！所有结果已保存到:", results_dir)
+        evaluation_results = evaluate_all_sets(
+            model, train_loader, test_loader, device, num_classes, idx_to_label, results_dir
+        )
+
+        # 收集结果
+        results = {
+            'model_performance': performance_metrics,
+            'training_time': {
+                'total_training_time_seconds': sum(epoch_times),
+                'average_epoch_time_seconds': avg_epoch_time,
+                'epoch_times': [float(t) for t in epoch_times]
+            },
+            'train_accuracy': evaluation_results['train']['accuracy'],
+            'test_accuracy': evaluation_results['test']['accuracy'],
+            'train_kappa': evaluation_results['train']['kappa'],
+            'test_kappa': evaluation_results['test']['kappa'],
+            'train_macro_precision': evaluation_results['train']['macro_precision'],
+            'test_macro_precision': evaluation_results['test']['macro_precision'],
+            'train_macro_recall': evaluation_results['train']['macro_recall'],
+            'test_macro_recall': evaluation_results['test']['macro_recall'],
+            'train_macro_f1': evaluation_results['train']['macro_f1'],
+            'test_macro_f1': evaluation_results['test']['macro_f1'],
+            'train_weighted_precision': evaluation_results['train']['weighted_precision'],
+            'test_weighted_precision': evaluation_results['test']['weighted_precision'],
+            'train_weighted_recall': evaluation_results['train']['weighted_recall'],
+            'test_weighted_recall': evaluation_results['test']['weighted_recall'],
+            'train_weighted_f1': evaluation_results['train']['weighted_f1'],
+            'test_weighted_f1': evaluation_results['test']['weighted_f1'],
+            'train_losses': [float(loss) for loss in train_losses],
+            'train_accuracies': [float(acc) for acc in train_accs],
+            'test_losses': [float(loss) for loss in test_losses],
+            'test_accuracies': [float(acc) for acc in test_accs],
+            'wavelengths': wavelengths.tolist(),
+            'label_mapping': label_to_idx
+        }
+
+        # 保存完整结果
+        torch.save({
+            'model_state_dict': model.state_dict(),
+            'results': results,
+            'config': config_dict
+        }, os.path.join(results_dir, 'feature_concat_results.pth'))
+
+        with open(os.path.join(results_dir, 'results.json'), 'w', encoding='utf-8') as f:
+            json.dump(results, f, indent=4, ensure_ascii=False)
+
+        print("\n训练和评估完成！所有结果已保存到:", results_dir)
+
+        return results
+
+    finally:
+        # 恢复原始的 print 函数
+        builtins.print = original_print
+
+# # main 函数
+# def main():
+#     timestamp = datetime.datetime.now().strftime("%Y%m%d_%H%M%S")
+#     results_dir = os.path.join(Config.results_dir, f"experiment_{timestamp}")
+#     os.makedirs(results_dir, exist_ok=True)
+
+#     config_file = os.path.join(results_dir, 'config.json')
+#     config_dict = {k: v for k, v in vars(Config).items() if not k.startswith('__') and not callable(v)}
+#     with open(config_file, 'w') as f:
+#         json.dump(config_dict, f, indent=4)
+
+#     print("\n=== 模型配置 ===")
+#     print(f"数据文件: {Config.file_path}")
+#     print(f"数据表格: {Config.sheet_name}")
+#     print(f"训练轮数: {Config.epochs}")
+#     print(f"批次大小: {Config.batch_size}")
+#     print(f"学习率: {Config.learning_rate}")
+#     print(f"L2正则化系数: {Config.weight_decay}")
+#     print(f"L1正则化系数: {Config.l1_lambda}")
+#     print(f"数据集划分: 训练集 {(1 - Config.test_size) * 100:.1f}%, 测试集 {Config.test_size * 100:.1f}%")
+#     print(f"结果保存路径: {results_dir}")
+
+#     device = torch.device('cuda' if torch.cuda.is_available() else 'cpu')
+#     print(f"\n使用设备: {device}")
+
+#     torch.manual_seed(Config.random_seed)
+#     np.random.seed(Config.random_seed)
+
+#     data, labels, wavelengths = load_data(Config.file_path, Config.sheet_name)
+
+#     # 创建标签映射
+#     unique_labels = np.unique(labels)
+#     label_to_idx = {label: idx for idx, label in enumerate(unique_labels)}
+#     idx_to_label = {idx: label for label, idx in label_to_idx.items()}
+#     num_classes = len(unique_labels)
+
+#     # 保存标签映射
+#     label_mapping_file = os.path.join(results_dir, 'label_mapping.json')
+#     with open(label_mapping_file, 'w') as f:
+#         json.dump(label_to_idx, f, indent=4)
+
+#     print("\n标签映射关系:")
+#     for label, idx in label_to_idx.items():
+#         print(f"原始标签: {label} -> 索引: {idx}")
+
+#     X_train, X_test, y_train, y_test = train_test_split(
+#         data, labels,
+#         test_size=Config.test_size,
+#         stratify=labels,
+#         random_state=Config.random_seed
+#     )
+
+#     train_dataset = SpectralDataset(X_train, y_train, label_to_idx)
+#     test_dataset = SpectralDataset(X_test, y_test, label_to_idx)
+#     train_loader = DataLoader(train_dataset, batch_size=Config.batch_size, shuffle=True)
+#     test_loader = DataLoader(test_dataset, batch_size=Config.batch_size, shuffle=False)
+
+#     model = FeatureConcatenationFusionWithDual(input_size=data.shape[1], num_classes=num_classes)
+
+#     performance_metrics = measure_model_performance(model, data.shape[1], device)
+#     print(f"模型参数总量: {performance_metrics['total_params']:,}")
+#     print(f"可训练参数: {performance_metrics['trainable_params']:,}")
+#     print(f"参数总量 (M): {performance_metrics['total_params_M']:.2f}M")
+#     print(f"FLOPs: {performance_metrics['flops']:,}")
+#     print(f"FLOPs (G): {performance_metrics['flops_G']:.4f}G")
+#     print(f"单样本推理时间: {performance_metrics['inference_time_ms']:.2f}ms")
+#     print(f"推理速度 (FPS): {performance_metrics['fps']:.2f}")
+
+#     criterion = nn.CrossEntropyLoss()
+#     optimizer = optim.Adam(model.parameters(), lr=Config.learning_rate, weight_decay=Config.weight_decay)
+
+#     train_losses, train_accs, test_losses, test_accs, epoch_times = train_model(
+#         model, train_loader, test_loader, criterion, optimizer,
+#         epochs=Config.epochs, device=device, results_dir=results_dir
+#     )
+
+#     avg_epoch_time = np.mean(epoch_times)
+
+#     plot_training_curves(train_losses, train_accs, test_losses, test_accs, results_dir)
+
+#     model.load_state_dict(torch.load(os.path.join(results_dir, 'best_model.pth')))
+#     model = model.to(device)
+
+#     evaluation_results = evaluate_all_sets(
+#         model, train_loader, test_loader, device, num_classes, idx_to_label, results_dir
+#     )
+
+#     # 保存结果
+#     results = {
+#         'model_performance': performance_metrics,
+#         'training_time': {
+#             'total_training_time_seconds': sum(epoch_times),
+#             'average_epoch_time_seconds': avg_epoch_time,
+#             'epoch_times': [float(t) for t in epoch_times]
+#         },
+#         'train_accuracy': evaluation_results['train']['accuracy'],
+#         'test_accuracy': evaluation_results['test']['accuracy'],
+#         'train_kappa': evaluation_results['train']['kappa'],
+#         'test_kappa': evaluation_results['test']['kappa'],
+#         'train_macro_precision': evaluation_results['train']['macro_precision'],
+#         'test_macro_precision': evaluation_results['test']['macro_precision'],
+#         'train_macro_recall': evaluation_results['train']['macro_recall'],
+#         'test_macro_recall': evaluation_results['test']['macro_recall'],
+#         'train_macro_f1': evaluation_results['train']['macro_f1'],
+#         'test_macro_f1': evaluation_results['test']['macro_f1'],
+#         'train_weighted_precision': evaluation_results['train']['weighted_precision'],
+#         'test_weighted_precision': evaluation_results['test']['weighted_precision'],
+#         'train_weighted_recall': evaluation_results['train']['weighted_recall'],
+#         'test_weighted_recall': evaluation_results['test']['weighted_recall'],
+#         'train_weighted_f1': evaluation_results['train']['weighted_f1'],
+#         'test_weighted_f1': evaluation_results['test']['weighted_f1'],
+#         'train_losses': [float(loss) for loss in train_losses],
+#         'train_accuracies': [float(acc) for acc in train_accs],
+#         'test_losses': [float(loss) for loss in test_losses],
+#         'test_accuracies': [float(acc) for acc in test_accs],
+#         'wavelengths': wavelengths.tolist(),
+#         'label_mapping': label_to_idx
+#     }
+
+#     torch.save({
+#         'model_state_dict': model.state_dict(),
+#         'results': results,
+#         'config': config_dict
+#     }, os.path.join(results_dir, 'feature_concat_results.pth'))
+
+#     with open(os.path.join(results_dir, 'results.json'), 'w', encoding='utf-8') as f:
+#         json.dump(results, f, indent=4, ensure_ascii=False)
+
+#     print("\n训练和评估完成！所有结果已保存到:", results_dir)
 
 
-if __name__ == '__main__':
-    main()
+
+# if __name__ == '__main__':
+#     main()
 

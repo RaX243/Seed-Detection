@@ -1,6 +1,6 @@
 import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,QWidget, QPushButton, QLabel, QTextEdit, QFrame, QLineEdit, QGridLayout)
-from PyQt5.QtCore import Qt, QTimer
+from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette, QColor, QIntValidator
 # import data   # 导入数据采集模块， 本机测试的时候记得注释掉， 如果在嵌入式设备上测试就取消注释
 import matplotlib.pyplot as plt
@@ -10,9 +10,13 @@ from matplotlib import font_manager
 from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg as FigureCanvas
 from matplotlib.figure import Figure
 import os
+import io
+import sys
+import CNN_Transformer as ct
 from predictor import SpectrumPredictor
 import pandas as pd
 import logging
+from ui import CNNTransformerGUI
 
 # 字体这里出现了问题，但是不影响正常使用，所以这里把字体报错屏蔽掉了，等后续会把字体部分修好就可以了
 logging.getLogger('matplotlib.font_manager').setLevel(logging.ERROR)
@@ -119,7 +123,6 @@ QFrame#inputCard {
 """
 #---------- 全局 QSS 样式表 ----------
 
-
 class MainWindow(QMainWindow):
     def __init__(self):
         super().__init__()
@@ -131,6 +134,7 @@ class MainWindow(QMainWindow):
         self.startButton.clicked.connect(self.start_collection)
         self.cancalButton.clicked.connect(self.on_change_clicked)
         self.restartButton.clicked.connect(self.restart_clicked)
+        self.CNN_train_Button.clicked.connect(self.open_training_dialog)
         # 新增：连接“再次重复”按钮
         self.repeatButton.clicked.connect(self.repeat_again)
         self.cancalRepeatButton.clicked.connect(self.cancel_repeat_mode)
@@ -198,6 +202,10 @@ class MainWindow(QMainWindow):
         self.cancalButton.setObjectName("cancelButton")
         self.cancalButton.setMinimumHeight(40)
         left_layout.addWidget(self.cancalButton)
+
+        self.CNN_train_Button = QPushButton("模型训练")
+        self.CNN_train_Button.setMinimumHeight(40)
+        grid_layout.addWidget(self.CNN_train_Button)
 
         left_layout.addStretch()
         status_frame = QFrame()
@@ -563,6 +571,11 @@ class MainWindow(QMainWindow):
         self.timer_collect()  # 立即执行第一次采集
         self.timer.start(interval_sec * 1000)
         return True
+    
+
+    def open_training_dialog(self):
+        dialog = CNNTransformerGUI(self, style_sheet=self.styleSheet())
+        dialog.exec_()  # 模态对话框
 
 
 
