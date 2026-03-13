@@ -421,38 +421,38 @@ class MainWindow(QMainWindow):
         """采集数据（测试模式从Excel随机选取）"""
         print("正在采集数据...")
         # 实际硬件采集请取消注释以下代码块
-        # try:
-        #     import data
-        #     return data.acquire_and_plot_spectrum()
-        # except Exception as e:
-        #     return {'success': False, 'wavelengths': [], 'intensities': [], 'message': str(e)}
-
-        # 测试模式
-        print("测试模式：从 test/试验数据2.xlsx 随机选取一个样本")
         try:
-            file_path = os.path.join(os.path.dirname(__file__), "test", "试验数据2.xlsx")
-            df = pd.read_excel(file_path, header=None)
-            wavelengths = df.iloc[0, :-1].tolist()
-            data_rows = df.iloc[1:, :-1].values.astype(np.float32)
-            random_idx = np.random.randint(0, len(data_rows))
-            intensities = data_rows[random_idx].tolist()
-            print(f"成功从文件第 {random_idx+2} 行选取样本")
-            return {
-                'success': True,
-                'wavelengths': wavelengths,
-                'intensities': intensities,
-                'message': f'从文件随机选取第 {random_idx+2} 行作为测试数据'
-            }
+            import data
+            return data.acquire_and_plot_spectrum()
         except Exception as e:
-            print(f"读取文件失败: {e}")
-            wavelengths = list(range(400, 628))
-            intensities = list(np.random.randn(228) * 100 + 500)
-            return {
-                'success': True,
-                'wavelengths': wavelengths,
-                'intensities': intensities,
-                'message': '文件读取失败，使用随机生成数据'
-            }
+            return {'success': False, 'wavelengths': [], 'intensities': [], 'message': str(e)}
+
+        # # 测试模式
+        # print("测试模式：从 test/试验数据2.xlsx 随机选取一个样本")
+        # try:
+        #     file_path = os.path.join(os.path.dirname(__file__), "test", "试验数据2.xlsx")
+        #     df = pd.read_excel(file_path, header=None)
+        #     wavelengths = df.iloc[0, :-1].tolist()
+        #     data_rows = df.iloc[1:, :-1].values.astype(np.float32)
+        #     random_idx = np.random.randint(0, len(data_rows))
+        #     intensities = data_rows[random_idx].tolist()
+        #     print(f"成功从文件第 {random_idx+2} 行选取样本")
+        #     return {
+        #         'success': True,
+        #         'wavelengths': wavelengths,
+        #         'intensities': intensities,
+        #         'message': f'从文件随机选取第 {random_idx+2} 行作为测试数据'
+        #     }
+        # except Exception as e:
+        #     print(f"读取文件失败: {e}")
+        #     wavelengths = list(range(400, 628))
+        #     intensities = list(np.random.randn(228) * 100 + 500)
+        #     return {
+        #         'success': True,
+        #         'wavelengths': wavelengths,
+        #         'intensities': intensities,
+        #         'message': '文件读取失败，使用随机生成数据'
+        #     }
 
     def recognize_spectrum(self, spectrum_data):
         """识别光谱并显示结果，保存预测结果到 self.last_result"""

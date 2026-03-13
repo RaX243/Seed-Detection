@@ -1,11 +1,12 @@
+import matplotlib
+import os
+import sys
 import torch
 import torch.nn as nn
 import torch.optim as optim
 import torch.nn.functional as F
 import pandas as pd
 import numpy as np
-import matplotlib
-import os
 import datetime
 import builtins
 import json
@@ -16,7 +17,7 @@ from sklearn.model_selection import train_test_split
 from torch.utils.data import Dataset, DataLoader
 from tqdm import tqdm
 
-matplotlib.use('TkAgg')
+matplotlib.use('Agg')
 import matplotlib.pyplot as plt
 
 # # 设置中文字体

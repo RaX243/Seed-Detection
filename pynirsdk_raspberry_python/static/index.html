@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=yes">
+    <title>光谱仪智能预测系统</title>
+    <style>
+        * {
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            margin: 0;
+            padding: 20px;
+            background: #f5f5f5;
+            color: #333;
+        }
+        .container {
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        h1 {
+            font-size: 24px;
+            text-align: center;
+            color: #2c3e50;
+            margin-bottom: 30px;
+        }
+        .button-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        button {
+            font-size: 16px;
+            padding: 15px;
+            border: none;
+            border-radius: 10px;
+            background: #3498db;
+            color: white;
+            font-weight: 500;
+            cursor: pointer;
+            transition: background 0.2s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        button:active {
+            background: #2980b9;
+            transform: scale(0.98);
+        }
+        button:disabled {
+            background: #bdc3c7;
+            cursor: not-allowed;
+        }
+        .info-btn {
+            background: #2ecc71;
+        }
+        .info-btn:active {
+            background: #27ae60;
+        }
+        .predict-btn {
+            background: #9b59b6;
+            grid-column: span 2;
+        }
+        .predict-btn:active {
+            background: #8e44ad;
+        }
+        .card {
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.05);
+        }
+        .card h3 {
+            margin: 0 0 10px 0;
+            font-size: 18px;
+            color: #7f8c8d;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .message {
+            background: #f8f9fa;
+            border-left: 4px solid #3498db;
+            padding: 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            word-break: break-word;
+        }
+        .data-box {
+            background: #2c3e50;
+            color: #ecf0f1;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            font-size: 12px;
+            overflow-x: auto;
+            white-space: pre-wrap;
+            max-height: 200px;
+            overflow-y: auto;
+        }
+        .status {
+            display: inline-block;
+            width: 10px;
+            height: 10px;
+            border-radius: 50%;
+            margin-right: 6px;
+        }
+        .status.connected {
+            background: #2ecc71;
+            box-shadow: 0 0 5px #2ecc71;
+        }
+        .status.disconnected {
+            background: #e74c3c;
+        }
+        .header-status {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+        .prediction-result {
+            text-align: center;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            color: white;
+            margin-bottom: 20px;
+        }
+        .prediction-label {
+            font-size: 32px;
+            font-weight: bold;
+            margin: 10px 0;
+        }
+        .confidence-bar {
+            width: 100%;
+            height: 10px;
+            background: rgba(255,255,255,0.3);
+            border-radius: 5px;
+            margin: 10px 0;
+            overflow: hidden;
+        }
+        .confidence-fill {
+            height: 100%;
+            background: #fff;
+            border-radius: 5px;
+            transition: width 0.3s;
+        }
+        .probability-list {
+            margin-top: 15px;
+            text-align: left;
+        }
+        .probability-item {
+            display: flex;
+            align-items: center;
+            margin: 8px 0;
+            padding: 5px 10px;
+            background: rgba(255,255,255,0.1);
+            border-radius: 5px;
+        }
+        .prob-label {
+            flex: 0 0 100px;
+            font-size: 14px;
+        }
+        .prob-bar {
+            flex: 1;
+            height: 8px;
+            background: rgba(255,255,255,0.2);
+            border-radius: 4px;
+            margin: 0 10px;
+            overflow: hidden;
+        }
+        .prob-fill {
+            height: 100%;
+            background: #fff;
+            border-radius: 4px;
+        }
+        .prob-value {
+            flex: 0 0 60px;
+            text-align: right;
+            font-size: 14px;
+        }
+        .badge {
+            background: #e74c3c;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            margin-left: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>🔬 光谱仪智能预测系统</h1>
+        
+        <div class="header-status">
+            <span id="statusIndicator" class="status disconnected"></span>
+            <span id="statusText">未连接设备</span>
+            <span id="modelStatus" class="badge" style="background: #95a5a6;">模型未加载</span>
+        </div>
+        
+        <div class="button-grid">
+            <button onclick="connectDevice()" id="connectBtn">🔌 连接设备</button>
+            <button onclick="getInfo()" class="info-btn">ℹ️ 设备信息</button>
+            <button onclick="fetchWavelengths()" id="wlBtn">📊 获取波长</button>
+            <button onclick="fetchIntensities()" id="intBtn">📈 获取强度</button>
+            <button onclick="predict()" class="predict-btn" id="predictBtn">🤖 AI 预测种子类别</button>
+        </div>
+
+        <!-- 预测结果显示区域 -->
+        <div id="predictionCard" class="prediction-result" style="display: none;">
+            <div style="font-size: 18px; opacity: 0.9;">预测结果</div>
+            <div id="predictionLabel" class="prediction-label">-</div>
+            <div>置信度: <span id="confidenceValue">0</span>%</div>
+            <div class="confidence-bar">
+                <div id="confidenceBar" class="confidence-fill" style="width: 0%"></div>
+            </div>
+            <div id="probabilityList" class="probability-list"></div>
+        </div>
+
+        <div class="card">
+            <h3>📢 系统消息</h3>
+            <div id="message" class="message">点击"连接设备"开始...</div>
+        </div>
+
+        <div class="card">
+            <h3>📊 波长数据 <span style="font-size:12px; color:#95a5a6;">(前50个)</span></h3>
+            <div id="wavelengths" class="data-box">暂无数据</div>
+        </div>
+
+        <div class="card">
+            <h3>📈 强度数据 <span style="font-size:12px; color:#95a5a6;">(前50个)</span></h3>
+            <div id="intensities" class="data-box">暂无数据</div>
+        </div>
+    </div>
+
+    <script>
+        // 按钮状态控制
+        function setButtonsEnabled(enabled) {
+            document.getElementById('connectBtn').disabled = !enabled;
+            document.getElementById('wlBtn').disabled = !enabled;
+            document.getElementById('intBtn').disabled = !enabled;
+            document.getElementById('predictBtn').disabled = !enabled;
+        }
+
+        // 显示消息
+        function showMessage(msg, isError = false) {
+            const msgDiv = document.getElementById('message');
+            msgDiv.innerText = msg;
+            msgDiv.style.borderLeftColor = isError ? '#e74c3c' : '#3498db';
+        }
+
+        // 更新连接状态
+        function updateConnectionStatus(connected) {
+            const indicator = document.getElementById('statusIndicator');
+            const text = document.getElementById('statusText');
+            if (connected) {
+                indicator.className = 'status connected';
+                text.innerText = '设备已连接';
+            } else {
+                indicator.className = 'status disconnected';
+                text.innerText = '未连接设备';
+            }
+        }
+
+        // 更新模型状态
+        function updateModelStatus(loaded) {
+            const modelStatus = document.getElementById('modelStatus');
+            if (loaded) {
+                modelStatus.style.background = '#27ae60';
+                modelStatus.innerText = '模型已加载';
+            } else {
+                modelStatus.style.background = '#95a5a6';
+                modelStatus.innerText = '模型未加载';
+            }
+        }
+
+        // 显示预测结果
+        function showPredictionResult(result) {
+            const card = document.getElementById('predictionCard');
+            const labelEl = document.getElementById('predictionLabel');
+            const confValue = document.getElementById('confidenceValue');
+            const confBar = document.getElementById('confidenceBar');
+            const probList = document.getElementById('probabilityList');
+            
+            if (result.success) {
+                card.style.display = 'block';
+                labelEl.innerText = result.predicted_label;
+                const confidence = (result.confidence * 100).toFixed(2);
+                confValue.innerText = confidence;
+                confBar.style.width = confidence + '%';
+                
+                // 显示所有类别的概率
+                let html = '';
+                const sortedProbs = Object.entries(result.all_probabilities)
+                    .sort((a, b) => b[1] - a[1]);
+                
+                for (const [label, prob] of sortedProbs) {
+                    const percent = (prob * 100).toFixed(2);
+                    html += `
+                        <div class="probability-item">
+                            <span class="prob-label">${label}</span>
+                            <div class="prob-bar">
+                                <div class="prob-fill" style="width: ${percent}%"></div>
+                            </div>
+                            <span class="prob-value">${percent}%</span>
+                        </div>
+                    `;
+                }
+                probList.innerHTML = html;
+                
+                showMessage(`预测成功: ${result.predicted_label} (置信度: ${confidence}%)`);
+            } else {
+                showMessage('预测失败: ' + result.message, true);
+            }
+        }
+
+        // 连接设备
+        async function connectDevice() {
+            showMessage('正在连接设备...');
+            setButtonsEnabled(false);
+            
+            try {
+                const resp = await fetch('/api/connect', { 
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await resp.json();
+                showMessage(data.message, !data.success);
+                if (data.success) {
+                    updateConnectionStatus(true);
+                }
+            } catch (error) {
+                showMessage('网络错误：' + error.message, true);
+            } finally {
+                setButtonsEnabled(true);
+            }
+        }
+
+        // 获取设备信息
+        async function getInfo() {
+            try {
+                const resp = await fetch('/api/info');
+                const data = await resp.json();
+                if (data.success) {
+                    updateConnectionStatus(data.device_active);
+                    showMessage(`设备状态：${data.device_active ? '已连接' : '未连接'} | 像素点数：${data.pixel_num}`);
+                }
+            } catch (error) {
+                showMessage('获取信息失败：' + error.message, true);
+            }
+        }
+
+        // 获取波长
+        async function fetchWavelengths() {
+            showMessage('正在获取波长数据...');
+            
+            try {
+                const resp = await fetch('/api/wavelengths');
+                const data = await resp.json();
+                
+                if (data.success) {
+                    const displayCount = Math.min(50, data.wavelengths.length);
+                    const wl = data.wavelengths.slice(0, displayCount)
+                        .map(v => v.toFixed(2))
+                        .join(', ');
+                    document.getElementById('wavelengths').innerText = 
+                        `[${wl}${data.wavelengths.length > displayCount ? ', ...' : ''}]`;
+                    showMessage(`成功获取 ${data.wavelengths.length} 个波长数据`);
+                } else {
+                    document.getElementById('wavelengths').innerText = '获取失败';
+                    showMessage('错误: ' + data.message, true);
+                }
+            } catch (error) {
+                showMessage('网络错误：' + error.message, true);
+            }
+        }
+
+        // 获取强度
+        async function fetchIntensities() {
+            showMessage('正在获取强度数据...');
+            
+            try {
+                const resp = await fetch('/api/intensities');
+                const data = await resp.json();
+                
+                if (data.success) {
+                    const displayCount = Math.min(50, data.intensities.length);
+                    const ints = data.intensities.slice(0, displayCount).join(', ');
+                    document.getElementById('intensities').innerText = 
+                        `[${ints}${data.intensities.length > displayCount ? ', ...' : ''}]`;
+                    showMessage(`成功获取 ${data.intensities.length} 个强度数据`);
+                } else {
+                    document.getElementById('intensities').innerText = '获取失败';
+                    showMessage('错误: ' + data.message, true);
+                }
+            } catch (error) {
+                showMessage('网络错误：' + error.message, true);
+            }
+        }
+
+        // 预测
+        async function predict() {
+            showMessage('正在进行AI预测...');
+            
+            try {
+                const resp = await fetch('/api/predict', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                });
+                const data = await resp.json();
+                
+                showPredictionResult(data);
+            } catch (error) {
+                showMessage('预测请求失败：' + error.message, true);
+            }
+        }
+
+        // 检查模型状态
+        async function checkModelStatus() {
+            try {
+                const resp = await fetch('/api/model/info');
+                const data = await resp.json();
+                updateModelStatus(data.success);
+                
+                if (data.success) {
+                    console.log('模型类别:', data.classes);
+                }
+            } catch (error) {
+                console.log('获取模型状态失败');
+            }
+        }
+
+        // 页面加载时
+        window.onload = function() {
+            getInfo();
+            checkModelStatus();
+        };
+    </script>
+</body>
+</html>
