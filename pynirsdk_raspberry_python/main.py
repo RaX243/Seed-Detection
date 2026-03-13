@@ -2,7 +2,7 @@ import sys
 from PyQt5.QtWidgets import (QApplication, QMainWindow, QVBoxLayout, QHBoxLayout,QWidget, QPushButton, QLabel, QTextEdit, QFrame, QLineEdit, QGridLayout)
 from PyQt5.QtCore import Qt, QTimer, QThread, pyqtSignal
 from PyQt5.QtGui import QFont, QPalette, QColor, QIntValidator
-# import data   # 导入数据采集模块， 本机测试的时候记得注释掉， 如果在嵌入式设备上测试就取消注释
+import data   # 导入数据采集模块， 本机测试的时候记得注释掉， 如果在嵌入式设备上测试就取消注释
 import matplotlib.pyplot as plt
 import numpy as np
 import matplotlib
@@ -339,7 +339,7 @@ class MainWindow(QMainWindow):
 
     def timer_collect(self):
         """定时器槽函数"""
-        if self.collect_count >= self.max_collect:
+        if self.collect_count >= self.max绍了wrapp_collect:
             self.timer.stop()
             self.display_ten_results()
             self.result_label.setText("重复运行结束")

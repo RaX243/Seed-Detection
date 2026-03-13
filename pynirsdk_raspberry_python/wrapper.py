@@ -1,13 +1,14 @@
 import ctypes
 import os
 
-current_dir = os.getcwd()
-print(f"当前工作目录: {current_dir}")
-if not os.path.exists("lib/libwrapper.so"):
-    print("lib/libwrapper.so 不存在，请确保动态库文件存在于 lib 目录下！")
-    exit(1)
-libwrapper = ctypes.CDLL("lib/libwrapper.so")
+script_dir = os.path.dirname(os.path.abspath(__file__))
+lib_path = os.path.join(script_dir, "lib", "libwrapper.so")
 
+print(f"脚本目录: {script_dir}")
+if not os.path.exists(lib_path):
+    print(f"错误: {lib_path} 不存在，请确保动态库文件存在于 lib 目录下！")
+    exit(1)
+libwrapper = ctypes.CDLL(lib_path)
 
 
 
